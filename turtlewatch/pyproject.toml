@@ -7,6 +7,12 @@ requires-python = ">=3.12"
 dependencies = [
     "influxdb3-python>=0.16.0",
 ]
+[tool.uv.workspace]
+members = ["packages/*"]
+
+[tool.uv.sources]
+turtlewatch-bridge = { workspace = true }
+turtlewatch-msg-gen = { workspace = true }
 
 [tool.pyright]
 typeCheckingMode = "strict"

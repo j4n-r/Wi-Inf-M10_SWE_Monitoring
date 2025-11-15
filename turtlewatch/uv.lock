@@ -2,6 +2,18 @@ version = 1
 revision = 2
 requires-python = ">=3.12"
 
+[manifest]
+members = [
+    "bridge",
+    "msg-gen",
+    "turtlewatch",
+]
+
+[[package]]
+name = "bridge"
+version = "0.1.0"
+source = { virtual = "packages/bridge" }
+
 [[package]]
 name = "certifi"
 version = "2025.11.12"
@@ -26,6 +38,11 @@ sdist = { url = "https://files.pythonhosted.org/packages/98/f9/7113ac3b4b73bb7f6
 wheels = [
     { url = "https://files.pythonhosted.org/packages/00/13/5ded7bea72d34b9d892fb0b72e0bfa29c081cdf806a9170c34d7fd15e587/influxdb3_python-0.16.0-py3-none-any.whl", hash = "sha256:2f6d8caf671b25e0a19aeba5ed13eca6adc5bf141ef615b7e3d0f9f419a7711d", size = 89325, upload-time = "2025-09-15T12:13:00.683Z" },
 ]
+
+[[package]]
+name = "msg-gen"
+version = "0.1.0"
+source = { virtual = "packages/msg-gen" }
 
 [[package]]
 name = "pyarrow"

@@ -3,12 +3,31 @@ from dataclasses import dataclass
 from typing import TypeAlias
 import os
 
-type_lookup = {"float64": "int"}
 FieldType: TypeAlias = str
 FieldName: TypeAlias = str
 
+type_lookup = {
+    "bool": "bool",
 
-# type = [(int, x), (int, y)]
+    "int8": "int",
+    "int16": "int",
+    "int32": "int",
+    "int64": "int",
+
+    "uint8": "int",
+    "uint16": "int",
+    "uint32": "int",
+    "uint64": "int",
+    
+    "float32": "float",
+    "float64": "float",
+    
+    "string": "str",
+    "bytes": "bytes",
+    
+    "time": "rospy.Time",
+    "duration": "rospy.Duration",
+}
 
 
 @dataclass

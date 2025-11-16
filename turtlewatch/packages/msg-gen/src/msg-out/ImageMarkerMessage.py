@@ -5,13 +5,6 @@ from .HeaderMessage import HeaderMessage
 
 @dataclass
 class ImageMarkerMessage:
-    CIRCLE=0: int
-    LINE_STRIP=1: int
-    LINE_LIST=2: int
-    POLYGON=3: int
-    POINTS=4: int
-    ADD=0: int
-    REMOVE=1: int
     header: HeaderMessage
     ns: str
     id: int
@@ -25,5 +18,12 @@ class ImageMarkerMessage:
     lifetime: int
     points: list[geometry_msgs/PointMessage]
     outline_colors: list[std_msgs/ColorRGBAMessage]
+    CIRCLE: int = 0
+    LINE_STRIP: int = 1
+    LINE_LIST: int = 2
+    POLYGON: int = 3
+    POINTS: int = 4
+    ADD: int = 0
+    REMOVE: int = 1
 
     

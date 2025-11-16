@@ -36,7 +36,7 @@ class MessageField:
     field_type: str
     field_name: str
     is_array: bool
-    default_value: Any|None = None
+    default_value: Any | None = None
 
 
 def main():
@@ -67,7 +67,6 @@ def parse_from_message_file(files: list[Path]) -> list[Message]:
                     continue
                 words = line.split()
                 is_array = False
-                name = words[1]
                 type = words[0]
                 if "[" in type:
                     type = type.split("[")[0]
@@ -77,8 +76,21 @@ def parse_from_message_file(files: list[Path]) -> list[Message]:
                 else:
                     msg_type.imports.add(type + "Message")
                     type = type + "Message"
+
+                name = words[1]
+                default_vale = None
+                if "=" in name:
+                    const_parts = name.split("=")
+                    name = const_parts[0]
+                    default_vale = const_parts[1]
+
                 msg_type.members.append(
-                    MessageField(field_type=type, is_array=is_array, field_name=name)
+                    MessageField(
+                        field_type=type,
+                        is_array=is_array,
+                        field_name=name,
+                        default_value=default_vale,
+                    )
                 )
         messages.append(msg_type)
     # print(messages)
@@ -88,9 +100,14 @@ def parse_from_message_file(files: list[Path]) -> list[Message]:
 def write_to_file(msg: Message) -> None:
     imports = "".join([f"from .{imp} import {imp}\n" for imp in msg.imports])
     members: str = ""
-    for member in msg.members:
+
+    # put the fields with default values (consts) last
+    sorted_members = sorted(msg.members, key=lambda x: x.default_value is not None)
+    for member in sorted_members:
         if member.is_array:
             members += f"    {member.field_name}: list[{member.field_type}]\n"
+        elif member.default_value:
+            members += f"    {member.field_name}: {member.field_type} = {member.default_value}\n"
         else:
             members += f"    {member.field_name}: {member.field_type}\n"
 

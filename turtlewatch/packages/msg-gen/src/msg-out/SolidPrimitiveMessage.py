@@ -1,20 +1,19 @@
 from dataclasses import dataclass
 
+
 @dataclass
 class SolidPrimitiveMessage:
-    BOX=1: int
-    SPHERE=2: int
-    CYLINDER=3: int
-    CONE=4: int
     type: int
     dimensions: list[float]
-    BOX_X=0: int
-    BOX_Y=1: int
-    BOX_Z=2: int
-    SPHERE_RADIUS=0: int
-    CYLINDER_HEIGHT=0: int
-    CYLINDER_RADIUS=1: int
-    CONE_HEIGHT=0: int
-    CONE_RADIUS=1: int
-
-    
+    BOX: int = 1
+    SPHERE: int = 2
+    CYLINDER: int = 3
+    CONE: int = 4
+    BOX_X: int = 0
+    BOX_Y: int = 1
+    BOX_Z: int = 2
+    SPHERE_RADIUS: int = 0
+    CYLINDER_HEIGHT: int = 0
+    CYLINDER_RADIUS: int = 1
+    CONE_HEIGHT: int = 0
+    CONE_RADIUS: int = 1

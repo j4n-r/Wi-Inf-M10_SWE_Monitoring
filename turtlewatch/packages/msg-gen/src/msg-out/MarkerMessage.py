@@ -7,22 +7,6 @@ from .HeaderMessage import HeaderMessage
 
 @dataclass
 class MarkerMessage:
-    ARROW=0: int
-    CUBE=1: int
-    SPHERE=2: int
-    CYLINDER=3: int
-    LINE_STRIP=4: int
-    LINE_LIST=5: int
-    CUBE_LIST=6: int
-    SPHERE_LIST=7: int
-    POINTS=8: int
-    TEXT_VIEW_FACING=9: int
-    MESH_RESOURCE=10: int
-    TRIANGLE_LIST=11: int
-    ADD=0: int
-    MODIFY=0: int
-    DELETE=2: int
-    DELETEALL=3: int
     header: HeaderMessage
     ns: str
     id: int
@@ -38,5 +22,21 @@ class MarkerMessage:
     text: str
     mesh_resource: str
     mesh_use_embedded_materials: bool
+    ARROW: int = 0
+    CUBE: int = 1
+    SPHERE: int = 2
+    CYLINDER: int = 3
+    LINE_STRIP: int = 4
+    LINE_LIST: int = 5
+    CUBE_LIST: int = 6
+    SPHERE_LIST: int = 7
+    POINTS: int = 8
+    TEXT_VIEW_FACING: int = 9
+    MESH_RESOURCE: int = 10
+    TRIANGLE_LIST: int = 11
+    ADD: int = 0
+    MODIFY: int = 0
+    DELETE: int = 2
+    DELETEALL: int = 3
 
     

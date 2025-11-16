@@ -1,17 +1,15 @@
 from dataclasses import dataclass
-from .byteMessage import byteMessage
 from .KeyValueMessage import KeyValueMessage
+
 
 @dataclass
 class DiagnosticStatusMessage:
-    OK=0: byteMessage
-    WARN=1: byteMessage
-    ERROR=2: byteMessage
-    STALE=3: byteMessage
-    level: byteMessage
+    level: int
     name: str
     message: str
     hardware_id: str
     values: list[KeyValueMessage]
-
-    
+    OK: int = 0
+    WARN: int = 1
+    ERROR: int = 2
+    STALE: int = 3

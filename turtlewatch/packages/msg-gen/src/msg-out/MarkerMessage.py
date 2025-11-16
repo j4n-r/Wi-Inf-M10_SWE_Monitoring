@@ -1,9 +1,10 @@
 from dataclasses import dataclass
-from .geometry_msgs/PoseMessage import geometry_msgs/PoseMessage
-from .geometry_msgs/Vector3Message import geometry_msgs/Vector3Message
-from .geometry_msgs/PointMessage import geometry_msgs/PointMessage
-from .std_msgs/ColorRGBAMessage import std_msgs/ColorRGBAMessage
+from .PoseMessage import PoseMessage
+from .ColorRGBAMessage import ColorRGBAMessage
+from .PointMessage import PointMessage
+from .Vector3Message import Vector3Message
 from .HeaderMessage import HeaderMessage
+
 
 @dataclass
 class MarkerMessage:
@@ -12,13 +13,13 @@ class MarkerMessage:
     id: int
     type: int
     action: int
-    pose: geometry_msgs/PoseMessage
-    scale: geometry_msgs/Vector3Message
-    color: std_msgs/ColorRGBAMessage
+    pose: PoseMessage
+    scale: Vector3Message
+    color: ColorRGBAMessage
     lifetime: int
     frame_locked: bool
-    points: list[geometry_msgs/PointMessage]
-    colors: list[std_msgs/ColorRGBAMessage]
+    points: list[PointMessage]
+    colors: list[ColorRGBAMessage]
     text: str
     mesh_resource: str
     mesh_use_embedded_materials: bool
@@ -38,5 +39,3 @@ class MarkerMessage:
     MODIFY: int = 0
     DELETE: int = 2
     DELETEALL: int = 3
-
-    

@@ -1,7 +1,8 @@
 from dataclasses import dataclass
-from .geometry_msgs/PoseMessage import geometry_msgs/PoseMessage
+from .PoseMessage import PoseMessage
+from .PointMessage import PointMessage
 from .HeaderMessage import HeaderMessage
-from .geometry_msgs/PointMessage import geometry_msgs/PointMessage
+
 
 @dataclass
 class InteractiveMarkerFeedbackMessage:
@@ -16,9 +17,7 @@ class InteractiveMarkerFeedbackMessage:
     MOUSE_DOWN: int
     MOUSE_UP: int
     event_type: int
-    pose: geometry_msgs/PoseMessage
+    pose: PoseMessage
     menu_entry_id: int
-    mouse_point: geometry_msgs/PointMessage
+    mouse_point: PointMessage
     mouse_point_valid: bool
-
-    

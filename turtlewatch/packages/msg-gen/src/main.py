@@ -68,6 +68,8 @@ def parse_from_message_file(files: list[Path]) -> list[Message]:
                 words = line.split()
                 is_array = False
                 type = words[0]
+                if "/" in type:
+                    type = type.split("/")[1]
                 if "[" in type:
                     type = type.split("[")[0]
                     is_array = True
@@ -100,6 +102,8 @@ def parse_from_message_file(files: list[Path]) -> list[Message]:
 def write_to_file(msg: Message) -> None:
     imports = "".join([f"from .{imp} import {imp}\n" for imp in msg.imports])
     members: str = ""
+    if not msg.members:
+        members += "    pass"
 
     # put the fields with default values (consts) last
     sorted_members = sorted(msg.members, key=lambda x: x.default_value is not None)

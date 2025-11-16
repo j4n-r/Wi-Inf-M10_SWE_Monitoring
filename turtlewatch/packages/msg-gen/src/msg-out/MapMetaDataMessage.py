@@ -1,5 +1,6 @@
 from dataclasses import dataclass
-from .geometry_msgs/PoseMessage import geometry_msgs/PoseMessage
+from .PoseMessage import PoseMessage
+
 
 @dataclass
 class MapMetaDataMessage:
@@ -7,6 +8,4 @@ class MapMetaDataMessage:
     resolution: float
     width: int
     height: int
-    origin: geometry_msgs/PoseMessage
-
-    
+    origin: PoseMessage

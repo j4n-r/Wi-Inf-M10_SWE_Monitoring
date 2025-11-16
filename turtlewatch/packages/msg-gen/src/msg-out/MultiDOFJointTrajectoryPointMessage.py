@@ -1,12 +1,11 @@
 from dataclasses import dataclass
-from .geometry_msgs/TwistMessage import geometry_msgs/TwistMessage
-from .geometry_msgs/TransformMessage import geometry_msgs/TransformMessage
+from .TwistMessage import TwistMessage
+from .TransformMessage import TransformMessage
+
 
 @dataclass
 class MultiDOFJointTrajectoryPointMessage:
-    transforms: list[geometry_msgs/TransformMessage]
-    velocities: list[geometry_msgs/TwistMessage]
-    accelerations: list[geometry_msgs/TwistMessage]
+    transforms: list[TransformMessage]
+    velocities: list[TwistMessage]
+    accelerations: list[TwistMessage]
     time_from_start: int
-
-    

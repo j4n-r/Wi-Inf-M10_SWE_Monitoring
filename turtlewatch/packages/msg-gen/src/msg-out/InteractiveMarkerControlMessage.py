@@ -1,11 +1,12 @@
 from dataclasses import dataclass
+from .QuaternionMessage import QuaternionMessage
 from .MarkerMessage import MarkerMessage
-from .geometry_msgs/QuaternionMessage import geometry_msgs/QuaternionMessage
+
 
 @dataclass
 class InteractiveMarkerControlMessage:
     name: str
-    orientation: geometry_msgs/QuaternionMessage
+    orientation: QuaternionMessage
     INHERIT: int
     FIXED: int
     VIEW_FACING: int
@@ -25,5 +26,3 @@ class InteractiveMarkerControlMessage:
     markers: list[MarkerMessage]
     independent_marker_orientation: bool
     description: str
-
-    

@@ -42,7 +42,7 @@ wheels = [
 [[package]]
 name = "msg-gen"
 version = "0.1.0"
-source = { virtual = "packages/msg-gen" }
+source = { virtual = "packages/msg_gen" }
 
 [[package]]
 name = "pyarrow"

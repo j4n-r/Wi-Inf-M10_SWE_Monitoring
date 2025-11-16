@@ -1,13 +1,19 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
+import genpy
 import time
 from .Vector3Message import Vector3Message
 
 @dataclass
-class TwistMessage:
+class TwistMessage(genpy.Message):
+    _type: str # topic type \cmd_vel
     linear: Vector3Message
     angular: Vector3Message
 
+    __slots__ = ['linear', 'angular']
+    _slot_types = ['Vector3', 'Vector3']
+    _has_header: bool = False
+    _md5sum = "350b8bbed409ae6d362b8c60bb6076c4"
     def to_influx_point(self, tags: dict[str,str]) -> dict[str, Any]:
         return {
             "measurement" : str(self.__class__.__name__),

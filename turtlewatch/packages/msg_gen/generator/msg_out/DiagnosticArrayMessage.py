@@ -1,14 +1,20 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
+import genpy
 import time
 from .DiagnosticStatusMessage import DiagnosticStatusMessage
 from .HeaderMessage import HeaderMessage
 
 @dataclass
-class DiagnosticArrayMessage:
+class DiagnosticArrayMessage(genpy.Message):
+    _type: str # topic type \cmd_vel
     header: HeaderMessage
     status: list[DiagnosticStatusMessage]
 
+    __slots__ = ['header', 'status']
+    _slot_types = ['Header', 'DiagnosticStatus']
+    _has_header: bool = False
+    _md5sum = "04c6c3c3483f0f23362838b6a69b28e7"
     def to_influx_point(self, tags: dict[str,str]) -> dict[str, Any]:
         return {
             "measurement" : str(self.__class__.__name__),

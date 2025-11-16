@@ -20,7 +20,7 @@ class InfluxLogger:
         
         # Setup InfluxDB client
         logger.info("Reading InfluxDB token...")
-        with open("../influxdb_token.txt", "r") as file:
+        with open("../../influxdb_token.txt", "r") as file:
             db_token = file.read().strip()
         
         logger.info("Connecting to InfluxDB...")

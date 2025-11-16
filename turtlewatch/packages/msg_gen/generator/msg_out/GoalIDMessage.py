@@ -1,12 +1,18 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
+import genpy
 import time
 
 @dataclass
-class GoalIDMessage:
+class GoalIDMessage(genpy.Message):
+    _type: str # topic type \cmd_vel
     stamp: int
     id: str
 
+    __slots__ = ['stamp', 'id']
+    _slot_types = ['time', 'string']
+    _has_header: bool = False
+    _md5sum = "d41d8cd98f00b204e9800998ecf8427e"
     def to_influx_point(self, tags: dict[str,str]) -> dict[str, Any]:
         return {
             "measurement" : str(self.__class__.__name__),

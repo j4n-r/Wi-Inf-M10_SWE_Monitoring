@@ -1,11 +1,17 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
+import genpy
 import time
 
 @dataclass
-class Float64Message:
+class Float64Message(genpy.Message):
+    _type: str # topic type \cmd_vel
     data: float
 
+    __slots__ = ['data']
+    _slot_types = ['float64']
+    _has_header: bool = False
+    _md5sum = "d41d8cd98f00b204e9800998ecf8427e"
     def to_influx_point(self, tags: dict[str,str]) -> dict[str, Any]:
         return {
             "measurement" : str(self.__class__.__name__),

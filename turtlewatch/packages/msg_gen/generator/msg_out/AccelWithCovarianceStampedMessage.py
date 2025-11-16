@@ -1,14 +1,20 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
+import genpy
 import time
 from .AccelWithCovarianceMessage import AccelWithCovarianceMessage
 from .HeaderMessage import HeaderMessage
 
 @dataclass
-class AccelWithCovarianceStampedMessage:
+class AccelWithCovarianceStampedMessage(genpy.Message):
+    _type: str # topic type \cmd_vel
     header: HeaderMessage
     accel: AccelWithCovarianceMessage
 
+    __slots__ = ['header', 'accel']
+    _slot_types = ['Header', 'AccelWithCovariance']
+    _has_header: bool = False
+    _md5sum = "4c7ea87bf5c29c70afc0626ade506637"
     def to_influx_point(self, tags: dict[str,str]) -> dict[str, Any]:
         return {
             "measurement" : str(self.__class__.__name__),

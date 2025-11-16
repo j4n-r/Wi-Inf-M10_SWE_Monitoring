@@ -1,5 +1,6 @@
 from __future__ import annotations
-from dataclasses import dataclass
+import hashlib
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, TypeAlias
 import os
@@ -39,8 +40,11 @@ class Message:
     identifier: str
     imports: set[str]
     members: list[MessageField]
-
-
+    __slots__: list[str] # ['header','child_frame_id','pose','twist']
+    #['std_msgs/Headr','string','geometry_msgs/PoseWithCovariance','geometry_msgs/TwistWithCovariance']
+    _slot_types: list[str]
+    _type: str  = ""# "nav_msgs/Odometry"
+    _has_header: bool  = False
 @dataclass
 class MessageField:
     field_type: str
@@ -54,7 +58,7 @@ def main():
     if not files:
         print("no files found")
         return
-    # files = [Path("src/msg-in/PoseWithCovariance.msg")]
+    # files = [Path("generator/msg_in/PoseWithCovariance.msg")]
     msgs = parse_from_message_file(files)
     for msg in msgs:
         write_to_file(msg)
@@ -65,13 +69,14 @@ def main():
 def parse_from_message_file(files: list[Path]) -> list[Message]:
     messages: list[Message] = []
     for file_path in files:
-        msg_type = Message("", set([]), [])
+        msg_type = Message("", set([]), [], [],[])
         with open(file_path, "r") as file:
             lines = file.readlines()
             path = file.name
             msg_type.identifier = (
                 os.path.basename(path).removesuffix(".msg") + "Message"
             )
+            msg_type._type = os.path.basename(path).removesuffix(".msg")
             lines = [line.strip() for line in lines]
 
             for line in lines:
@@ -80,11 +85,12 @@ def parse_from_message_file(files: list[Path]) -> list[Message]:
                 words = line.split()
                 is_array = False
                 type = words[0]
-                if "/" in type:
-                    type = type.split("/")[1]
                 if "[" in type:
                     type = type.split("[")[0]
                     is_array = True
+                msg_type._slot_types.append(type)
+                if "/" in type:
+                    type = type.split("/")[1]
                 if type in type_lookup:
                     type = type_lookup[type]
                 else:
@@ -97,6 +103,8 @@ def parse_from_message_file(files: list[Path]) -> list[Message]:
                     const_parts = name.split("=")
                     name = const_parts[0]
                     default_vale = const_parts[1]
+                else:
+                    msg_type.__slots__.append(name)
 
                 msg_type.members.append(
                     MessageField(
@@ -128,13 +136,19 @@ def write_to_file(msg: Message) -> None:
         else:
             members += f"    {member.field_name}: {member.field_type}\n"
 
-    buffer = f"""from dataclasses import dataclass
+    buffer = f"""from dataclasses import dataclass, field
 from typing import Any
+import genpy
 import time
 {imports}
 @dataclass
-class {msg.identifier}:
+class {msg.identifier}(genpy.Message):
+    _type: str # topic type \\cmd_vel
 {members}
+    __slots__ = {msg.__slots__}
+    _slot_types = {msg._slot_types}
+    _has_header: bool = {msg._has_header}
+    _md5sum = "{hashlib.md5(members.join(imports).encode()).hexdigest()}"
     def to_influx_point(self, tags: dict[str,str]) -> dict[str, Any]:
         return {{
             "measurement" : str(self.__class__.__name__),
@@ -154,12 +168,12 @@ def flatten_message(msg: Any, prefix: str):
             result[key] = v
     return result
     """
-    with open(f"./generator/msg_out/{msg.identifier}.py", "w") as file:
+    with open(f"./msg_gen/generator/msg_out/{msg.identifier}.py", "w") as file:
         _ = file.write(buffer)
 
 
 def gen_init_file(msgs: list[Message]) -> None:
-    files = list(Path("./generator/msg_out").rglob("*.py"))
+    files = list(Path("./msg_gen/generator/msg_out").rglob("*.py"))
     imports = ""
     all: list[str] = []
     for path in files:
@@ -171,7 +185,7 @@ def gen_init_file(msgs: list[Message]) -> None:
 
 __all__ = ['{"','".join(all)}']
     """
-    with open(f"./generator/msg_out/__init__.py", "w") as file:
+    with open(f"./msg_gen/generator/msg_out/__init__.py", "w") as file:
         _ = file.write(buffer)
 
 

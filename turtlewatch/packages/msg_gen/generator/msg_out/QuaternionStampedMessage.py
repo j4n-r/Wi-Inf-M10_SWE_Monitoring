@@ -1,14 +1,20 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
+import genpy
 import time
 from .QuaternionMessage import QuaternionMessage
 from .HeaderMessage import HeaderMessage
 
 @dataclass
-class QuaternionStampedMessage:
+class QuaternionStampedMessage(genpy.Message):
+    _type: str # topic type \cmd_vel
     header: HeaderMessage
     quaternion: QuaternionMessage
 
+    __slots__ = ['header', 'quaternion']
+    _slot_types = ['Header', 'Quaternion']
+    _has_header: bool = False
+    _md5sum = "cf387d6c8d53742a1d568574ae02d678"
     def to_influx_point(self, tags: dict[str,str]) -> dict[str, Any]:
         return {
             "measurement" : str(self.__class__.__name__),

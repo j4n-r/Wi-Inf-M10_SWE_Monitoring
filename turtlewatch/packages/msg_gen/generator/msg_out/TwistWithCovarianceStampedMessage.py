@@ -1,14 +1,20 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
+import genpy
 import time
 from .TwistWithCovarianceMessage import TwistWithCovarianceMessage
 from .HeaderMessage import HeaderMessage
 
 @dataclass
-class TwistWithCovarianceStampedMessage:
+class TwistWithCovarianceStampedMessage(genpy.Message):
+    _type: str # topic type \cmd_vel
     header: HeaderMessage
     twist: TwistWithCovarianceMessage
 
+    __slots__ = ['header', 'twist']
+    _slot_types = ['Header', 'TwistWithCovariance']
+    _has_header: bool = False
+    _md5sum = "3761805dbb1c086d1d2a76698f4c990e"
     def to_influx_point(self, tags: dict[str,str]) -> dict[str, Any]:
         return {
             "measurement" : str(self.__class__.__name__),

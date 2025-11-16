@@ -1,15 +1,21 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
+import genpy
 import time
 
 @dataclass
-class JointTrajectoryPointMessage:
+class JointTrajectoryPointMessage(genpy.Message):
+    _type: str # topic type \cmd_vel
     positions: list[float]
     velocities: list[float]
     accelerations: list[float]
     effort: list[float]
     time_from_start: int
 
+    __slots__ = ['positions', 'velocities', 'accelerations', 'effort', 'time_from_start']
+    _slot_types = ['float64', 'float64', 'float64', 'float64', 'duration']
+    _has_header: bool = False
+    _md5sum = "d41d8cd98f00b204e9800998ecf8427e"
     def to_influx_point(self, tags: dict[str,str]) -> dict[str, Any]:
         return {
             "measurement" : str(self.__class__.__name__),

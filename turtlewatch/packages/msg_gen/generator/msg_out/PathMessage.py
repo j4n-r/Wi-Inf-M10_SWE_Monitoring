@@ -1,14 +1,20 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
+import genpy
 import time
 from .PoseStampedMessage import PoseStampedMessage
 from .HeaderMessage import HeaderMessage
 
 @dataclass
-class PathMessage:
+class PathMessage(genpy.Message):
+    _type: str # topic type \cmd_vel
     header: HeaderMessage
     poses: list[PoseStampedMessage]
 
+    __slots__ = ['header', 'poses']
+    _slot_types = ['Header', 'geometry_msgs/PoseStamped']
+    _has_header: bool = False
+    _md5sum = "b5dca244f73b102cbdf9363861543def"
     def to_influx_point(self, tags: dict[str,str]) -> dict[str, Any]:
         return {
             "measurement" : str(self.__class__.__name__),

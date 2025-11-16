@@ -1,10 +1,12 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
+import genpy
 import time
 from .GoalIDMessage import GoalIDMessage
 
 @dataclass
-class GoalStatusMessage:
+class GoalStatusMessage(genpy.Message):
+    _type: str # topic type \cmd_vel
     goal_id: GoalIDMessage
     status: int
     PENDING: int
@@ -19,6 +21,10 @@ class GoalStatusMessage:
     LOST: int
     text: str
 
+    __slots__ = ['goal_id', 'status', 'PENDING', 'ACTIVE', 'PREEMPTED', 'SUCCEEDED', 'ABORTED', 'REJECTED', 'PREEMPTING', 'RECALLING', 'RECALLED', 'LOST', 'text']
+    _slot_types = ['GoalID', 'uint8', 'uint8', 'uint8', 'uint8', 'uint8', 'uint8', 'uint8', 'uint8', 'uint8', 'uint8', 'uint8', 'string']
+    _has_header: bool = False
+    _md5sum = "22c3cfa1ecb22bd358e8b6ac088e79a8"
     def to_influx_point(self, tags: dict[str,str]) -> dict[str, Any]:
         return {
             "measurement" : str(self.__class__.__name__),

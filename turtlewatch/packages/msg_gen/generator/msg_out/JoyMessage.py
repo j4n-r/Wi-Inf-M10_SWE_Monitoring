@@ -1,14 +1,20 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
+import genpy
 import time
 from .HeaderMessage import HeaderMessage
 
 @dataclass
-class JoyMessage:
+class JoyMessage(genpy.Message):
+    _type: str # topic type \cmd_vel
     header: HeaderMessage
     axes: list[float]
     buttons: list[int]
 
+    __slots__ = ['header', 'axes', 'buttons']
+    _slot_types = ['Header', 'float32', 'int32']
+    _has_header: bool = False
+    _md5sum = "a72d051fce54422022a1ef5e665e28fb"
     def to_influx_point(self, tags: dict[str,str]) -> dict[str, Any]:
         return {
             "measurement" : str(self.__class__.__name__),

@@ -1,17 +1,23 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
+import genpy
 import time
 from .PoseWithCovarianceMessage import PoseWithCovarianceMessage
 from .TwistWithCovarianceMessage import TwistWithCovarianceMessage
 from .HeaderMessage import HeaderMessage
 
 @dataclass
-class OdometryMessage:
+class OdometryMessage(genpy.Message):
+    _type: str # topic type \cmd_vel
     header: HeaderMessage
     child_frame_id: str
     pose: PoseWithCovarianceMessage
     twist: TwistWithCovarianceMessage
 
+    __slots__ = ['header', 'child_frame_id', 'pose', 'twist']
+    _slot_types = ['Header', 'string', 'geometry_msgs/PoseWithCovariance', 'geometry_msgs/TwistWithCovariance']
+    _has_header: bool = False
+    _md5sum = "13a6beffa1e8feec6758a6792f531bb0"
     def to_influx_point(self, tags: dict[str,str]) -> dict[str, Any]:
         return {
             "measurement" : str(self.__class__.__name__),

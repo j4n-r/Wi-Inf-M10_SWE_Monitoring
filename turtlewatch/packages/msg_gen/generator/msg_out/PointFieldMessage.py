@@ -1,9 +1,11 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
+import genpy
 import time
 
 @dataclass
-class PointFieldMessage:
+class PointFieldMessage(genpy.Message):
+    _type: str # topic type \cmd_vel
     INT8: int
     UINT8: int
     INT16: int
@@ -17,6 +19,10 @@ class PointFieldMessage:
     datatype: int
     count: int
 
+    __slots__ = ['INT8', 'UINT8', 'INT16', 'UINT16', 'INT32', 'UINT32', 'FLOAT32', 'FLOAT64', 'name', 'offset', 'datatype', 'count']
+    _slot_types = ['uint8', 'uint8', 'uint8', 'uint8', 'uint8', 'uint8', 'uint8', 'uint8', 'string', 'uint32', 'uint8', 'uint32']
+    _has_header: bool = False
+    _md5sum = "d41d8cd98f00b204e9800998ecf8427e"
     def to_influx_point(self, tags: dict[str,str]) -> dict[str, Any]:
         return {
             "measurement" : str(self.__class__.__name__),

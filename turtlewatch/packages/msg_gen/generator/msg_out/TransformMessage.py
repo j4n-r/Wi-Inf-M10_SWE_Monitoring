@@ -1,14 +1,20 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
+import genpy
 import time
 from .Vector3Message import Vector3Message
 from .QuaternionMessage import QuaternionMessage
 
 @dataclass
-class TransformMessage:
+class TransformMessage(genpy.Message):
+    _type: str # topic type \cmd_vel
     translation: Vector3Message
     rotation: QuaternionMessage
 
+    __slots__ = ['translation', 'rotation']
+    _slot_types = ['Vector3', 'Quaternion']
+    _has_header: bool = False
+    _md5sum = "074f89f337b290ae08fbb0c87570399a"
     def to_influx_point(self, tags: dict[str,str]) -> dict[str, Any]:
         return {
             "measurement" : str(self.__class__.__name__),

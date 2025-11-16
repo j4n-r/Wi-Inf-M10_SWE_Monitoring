@@ -1,15 +1,21 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
+import genpy
 import time
 from .Vector3Message import Vector3Message
 from .HeaderMessage import HeaderMessage
 
 @dataclass
-class MagneticFieldMessage:
+class MagneticFieldMessage(genpy.Message):
+    _type: str # topic type \cmd_vel
     header: HeaderMessage
     magnetic_field: Vector3Message
     magnetic_field_covariance: list[float]
 
+    __slots__ = ['header', 'magnetic_field', 'magnetic_field_covariance']
+    _slot_types = ['Header', 'geometry_msgs/Vector3', 'float64']
+    _has_header: bool = False
+    _md5sum = "7adfe4dc3f9ad1c89b9423975fbe33dc"
     def to_influx_point(self, tags: dict[str,str]) -> dict[str, Any]:
         return {
             "measurement" : str(self.__class__.__name__),

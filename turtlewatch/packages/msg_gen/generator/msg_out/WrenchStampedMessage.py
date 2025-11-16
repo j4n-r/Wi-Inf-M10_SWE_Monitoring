@@ -1,14 +1,20 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
+import genpy
 import time
 from .WrenchMessage import WrenchMessage
 from .HeaderMessage import HeaderMessage
 
 @dataclass
-class WrenchStampedMessage:
+class WrenchStampedMessage(genpy.Message):
+    _type: str # topic type \cmd_vel
     header: HeaderMessage
     wrench: WrenchMessage
 
+    __slots__ = ['header', 'wrench']
+    _slot_types = ['Header', 'Wrench']
+    _has_header: bool = False
+    _md5sum = "ff3ee30b2a9aeae860115dd9f4136c6e"
     def to_influx_point(self, tags: dict[str,str]) -> dict[str, Any]:
         return {
             "measurement" : str(self.__class__.__name__),

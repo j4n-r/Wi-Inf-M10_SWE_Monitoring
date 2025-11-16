@@ -1,14 +1,20 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
+import genpy
 import time
 from .PointMessage import PointMessage
 from .MeshTriangleMessage import MeshTriangleMessage
 
 @dataclass
-class MeshMessage:
+class MeshMessage(genpy.Message):
+    _type: str # topic type \cmd_vel
     triangles: list[MeshTriangleMessage]
     vertices: list[PointMessage]
 
+    __slots__ = ['triangles', 'vertices']
+    _slot_types = ['MeshTriangle', 'geometry_msgs/Point']
+    _has_header: bool = False
+    _md5sum = "f74150d0117e63eb33eec922fa6434f6"
     def to_influx_point(self, tags: dict[str,str]) -> dict[str, Any]:
         return {
             "measurement" : str(self.__class__.__name__),

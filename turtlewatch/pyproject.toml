@@ -11,8 +11,8 @@ dependencies = [
 members = ["packages/*"]
 
 [tool.uv.sources]
-turtlewatch-bridge = { workspace = true }
-turtlewatch-msg_gen = { workspace = true }
+bridge = { workspace = true }
+msg_gen = { workspace = true }
 
 [tool.pyright]
 typeCheckingMode = "strict"

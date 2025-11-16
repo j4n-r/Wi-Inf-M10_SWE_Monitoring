@@ -1,15 +1,21 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
+import genpy
 import time
 from .HeaderMessage import HeaderMessage
 from .TransformMessage import TransformMessage
 
 @dataclass
-class TransformStampedMessage:
+class TransformStampedMessage(genpy.Message):
+    _type: str # topic type \cmd_vel
     header: HeaderMessage
     child_frame_id: str
     transform: TransformMessage
 
+    __slots__ = ['header', 'child_frame_id', 'transform']
+    _slot_types = ['Header', 'string', 'Transform']
+    _has_header: bool = False
+    _md5sum = "28525105437ad9fa56589e09c0378ce1"
     def to_influx_point(self, tags: dict[str,str]) -> dict[str, Any]:
         return {
             "measurement" : str(self.__class__.__name__),

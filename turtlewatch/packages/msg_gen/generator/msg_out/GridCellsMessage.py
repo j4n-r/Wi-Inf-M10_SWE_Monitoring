@@ -1,16 +1,22 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
+import genpy
 import time
 from .PointMessage import PointMessage
 from .HeaderMessage import HeaderMessage
 
 @dataclass
-class GridCellsMessage:
+class GridCellsMessage(genpy.Message):
+    _type: str # topic type \cmd_vel
     header: HeaderMessage
     cell_width: float
     cell_height: float
     cells: list[PointMessage]
 
+    __slots__ = ['header', 'cell_width', 'cell_height', 'cells']
+    _slot_types = ['Header', 'float32', 'float32', 'geometry_msgs/Point']
+    _has_header: bool = False
+    _md5sum = "46b3764d52af7d790149e5be0994fcf9"
     def to_influx_point(self, tags: dict[str,str]) -> dict[str, Any]:
         return {
             "measurement" : str(self.__class__.__name__),

@@ -8,3 +8,7 @@
 
 Run `ruff format` to check if all the messages where generated correctly
 
+
+Well maybe it will be compatible after adding the actual topic type to the class. 
+
+Maybe explore to serialize arbitrary rospy.Message instances to a influx db point ?

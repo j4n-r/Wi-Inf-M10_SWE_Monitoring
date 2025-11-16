@@ -1,12 +1,18 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
+import genpy
 import time
 from .Point32Message import Point32Message
 
 @dataclass
-class PolygonMessage:
+class PolygonMessage(genpy.Message):
+    _type: str # topic type \cmd_vel
     points: list[Point32Message]
 
+    __slots__ = ['points']
+    _slot_types = ['Point32']
+    _has_header: bool = False
+    _md5sum = "973aaadd90abd0388eac797496c194a0"
     def to_influx_point(self, tags: dict[str,str]) -> dict[str, Any]:
         return {
             "measurement" : str(self.__class__.__name__),

@@ -1,13 +1,19 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
+import genpy
 import time
 from .MultiArrayDimensionMessage import MultiArrayDimensionMessage
 
 @dataclass
-class MultiArrayLayoutMessage:
+class MultiArrayLayoutMessage(genpy.Message):
+    _type: str # topic type \cmd_vel
     dim: list[MultiArrayDimensionMessage]
     data_offset: int
 
+    __slots__ = ['dim', 'data_offset']
+    _slot_types = ['MultiArrayDimension', 'uint32']
+    _has_header: bool = False
+    _md5sum = "54bc0ebbaeff78798734fc5b64369bc6"
     def to_influx_point(self, tags: dict[str,str]) -> dict[str, Any]:
         return {
             "measurement" : str(self.__class__.__name__),

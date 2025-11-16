@@ -1,14 +1,20 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
+import genpy
 import time
 from .PolygonMessage import PolygonMessage
 from .HeaderMessage import HeaderMessage
 
 @dataclass
-class PolygonStampedMessage:
+class PolygonStampedMessage(genpy.Message):
+    _type: str # topic type \cmd_vel
     header: HeaderMessage
     polygon: PolygonMessage
 
+    __slots__ = ['header', 'polygon']
+    _slot_types = ['Header', 'Polygon']
+    _has_header: bool = False
+    _md5sum = "c242166b5f32cd2276f4819ed35ecc6c"
     def to_influx_point(self, tags: dict[str,str]) -> dict[str, Any]:
         return {
             "measurement" : str(self.__class__.__name__),

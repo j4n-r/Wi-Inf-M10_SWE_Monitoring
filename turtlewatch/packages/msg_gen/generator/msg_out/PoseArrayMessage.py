@@ -1,14 +1,20 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
+import genpy
 import time
 from .PoseMessage import PoseMessage
 from .HeaderMessage import HeaderMessage
 
 @dataclass
-class PoseArrayMessage:
+class PoseArrayMessage(genpy.Message):
+    _type: str # topic type \cmd_vel
     header: HeaderMessage
     poses: list[PoseMessage]
 
+    __slots__ = ['header', 'poses']
+    _slot_types = ['Header', 'Pose']
+    _has_header: bool = False
+    _md5sum = "7409818f460a6d303820a4786fb36f40"
     def to_influx_point(self, tags: dict[str,str]) -> dict[str, Any]:
         return {
             "measurement" : str(self.__class__.__name__),

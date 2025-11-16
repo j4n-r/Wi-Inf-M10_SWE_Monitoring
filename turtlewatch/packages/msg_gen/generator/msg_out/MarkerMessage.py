@@ -1,5 +1,6 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
+import genpy
 import time
 from .PoseMessage import PoseMessage
 from .ColorRGBAMessage import ColorRGBAMessage
@@ -8,7 +9,8 @@ from .Vector3Message import Vector3Message
 from .HeaderMessage import HeaderMessage
 
 @dataclass
-class MarkerMessage:
+class MarkerMessage(genpy.Message):
+    _type: str # topic type \cmd_vel
     header: HeaderMessage
     ns: str
     id: int
@@ -41,6 +43,10 @@ class MarkerMessage:
     DELETE: int = 2
     DELETEALL: int = 3
 
+    __slots__ = ['header', 'ns', 'id', 'type', 'action', 'pose', 'scale', 'color', 'lifetime', 'frame_locked', 'points', 'colors', 'text', 'mesh_resource', 'mesh_use_embedded_materials']
+    _slot_types = ['uint8', 'uint8', 'uint8', 'uint8', 'uint8', 'uint8', 'uint8', 'uint8', 'uint8', 'uint8', 'uint8', 'uint8', 'uint8', 'uint8', 'uint8', 'uint8', 'Header', 'string', 'int32', 'int32', 'int32', 'geometry_msgs/Pose', 'geometry_msgs/Vector3', 'std_msgs/ColorRGBA', 'duration', 'bool', 'geometry_msgs/Point', 'std_msgs/ColorRGBA', 'string', 'string', 'bool']
+    _has_header: bool = False
+    _md5sum = "218be6254eefd0f5ae7c8ed52a06cd39"
     def to_influx_point(self, tags: dict[str,str]) -> dict[str, Any]:
         return {
             "measurement" : str(self.__class__.__name__),

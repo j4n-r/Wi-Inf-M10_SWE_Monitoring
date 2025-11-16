@@ -1,15 +1,21 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
+import genpy
 import time
 
 @dataclass
-class RegionOfInterestMessage:
+class RegionOfInterestMessage(genpy.Message):
+    _type: str # topic type \cmd_vel
     x_offset: int
     y_offset: int
     height: int
     width: int
     do_rectify: bool
 
+    __slots__ = ['x_offset', 'y_offset', 'height', 'width', 'do_rectify']
+    _slot_types = ['uint32', 'uint32', 'uint32', 'uint32', 'bool']
+    _has_header: bool = False
+    _md5sum = "d41d8cd98f00b204e9800998ecf8427e"
     def to_influx_point(self, tags: dict[str,str]) -> dict[str, Any]:
         return {
             "measurement" : str(self.__class__.__name__),

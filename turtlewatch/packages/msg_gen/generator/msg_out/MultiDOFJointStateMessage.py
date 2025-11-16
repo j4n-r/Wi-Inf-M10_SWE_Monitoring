@@ -1,5 +1,6 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
+import genpy
 import time
 from .WrenchMessage import WrenchMessage
 from .TwistMessage import TwistMessage
@@ -7,13 +8,18 @@ from .HeaderMessage import HeaderMessage
 from .TransformMessage import TransformMessage
 
 @dataclass
-class MultiDOFJointStateMessage:
+class MultiDOFJointStateMessage(genpy.Message):
+    _type: str # topic type \cmd_vel
     header: HeaderMessage
     joint_names: list[str]
     transforms: list[TransformMessage]
     twist: list[TwistMessage]
     wrench: list[WrenchMessage]
 
+    __slots__ = ['header', 'joint_names', 'transforms', 'twist', 'wrench']
+    _slot_types = ['Header', 'string', 'geometry_msgs/Transform', 'geometry_msgs/Twist', 'geometry_msgs/Wrench']
+    _has_header: bool = False
+    _md5sum = "5c830012f94fd42ac50a925d938e504c"
     def to_influx_point(self, tags: dict[str,str]) -> dict[str, Any]:
         return {
             "measurement" : str(self.__class__.__name__),

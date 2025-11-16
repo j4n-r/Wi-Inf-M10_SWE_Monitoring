@@ -1,11 +1,13 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
+import genpy
 import time
 from .RegionOfInterestMessage import RegionOfInterestMessage
 from .HeaderMessage import HeaderMessage
 
 @dataclass
-class CameraInfoMessage:
+class CameraInfoMessage(genpy.Message):
+    _type: str # topic type \cmd_vel
     header: HeaderMessage
     height: int
     width: int
@@ -18,6 +20,10 @@ class CameraInfoMessage:
     binning_y: int
     roi: RegionOfInterestMessage
 
+    __slots__ = ['header', 'height', 'width', 'distortion_model', 'D', 'K', 'R', 'P', 'binning_x', 'binning_y', 'roi']
+    _slot_types = ['Header', 'uint32', 'uint32', 'string', 'float64', 'float64', 'float64', 'float64', 'uint32', 'uint32', 'RegionOfInterest']
+    _has_header: bool = False
+    _md5sum = "2261a8eddbfd701ee34ecc977abcf12f"
     def to_influx_point(self, tags: dict[str,str]) -> dict[str, Any]:
         return {
             "measurement" : str(self.__class__.__name__),

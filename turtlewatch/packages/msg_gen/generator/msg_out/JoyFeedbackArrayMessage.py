@@ -1,12 +1,18 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
+import genpy
 import time
 from .JoyFeedbackMessage import JoyFeedbackMessage
 
 @dataclass
-class JoyFeedbackArrayMessage:
+class JoyFeedbackArrayMessage(genpy.Message):
+    _type: str # topic type \cmd_vel
     array: list[JoyFeedbackMessage]
 
+    __slots__ = ['array']
+    _slot_types = ['JoyFeedback']
+    _has_header: bool = False
+    _md5sum = "60f6c486bad093689dd08c556610f7d0"
     def to_influx_point(self, tags: dict[str,str]) -> dict[str, Any]:
         return {
             "measurement" : str(self.__class__.__name__),

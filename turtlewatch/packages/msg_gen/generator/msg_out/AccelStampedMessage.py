@@ -1,14 +1,20 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
+import genpy
 import time
 from .AccelMessage import AccelMessage
 from .HeaderMessage import HeaderMessage
 
 @dataclass
-class AccelStampedMessage:
+class AccelStampedMessage(genpy.Message):
+    _type: str # topic type \cmd_vel
     header: HeaderMessage
     accel: AccelMessage
 
+    __slots__ = ['header', 'accel']
+    _slot_types = ['Header', 'Accel']
+    _has_header: bool = False
+    _md5sum = "8f2dbb2370bbae5efc144018aa4f6213"
     def to_influx_point(self, tags: dict[str,str]) -> dict[str, Any]:
         return {
             "measurement" : str(self.__class__.__name__),

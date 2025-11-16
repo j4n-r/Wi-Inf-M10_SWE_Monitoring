@@ -1,7 +1,6 @@
 from fileinput import filelineno
 import rospy
-from geometry_msgs.msg import Twist
-from nav_msgs.msg import Odometry
+from msg_gen.generator.msg_out import OdometryMessage, TwistMessage
 from influxdb_client_3 import InfluxDBClient3, Point, WriteOptions
 from datetime import datetime
 import time
@@ -46,8 +45,8 @@ class InfluxLogger:
         
         # Subscribe to topics
         logger.info("Subscribing to ROS topics...")
-        rospy.Subscriber('/cmd_vel', Twist, self.cmd_vel_callback)
-        rospy.Subscriber('/odom', Odometry, self.odom_callback)
+        rospy.Subscriber('/cmd_vel', TwistMessage, self.cmd_vel_callback)
+        rospy.Subscriber('/odom', OdometryMessage, self.odom_callback)
         
         logger.info("Subscribed to /cmd_vel and /odom (rate limited to 1 Hz)")
         logger.info("TurtleWatch logger is running...")
@@ -62,7 +61,7 @@ class InfluxLogger:
             return True, current_time
         return False, last_time
     
-    def cmd_vel_callback(self, msg):
+    def cmd_vel_callback(self, msg: TwistMessage):
         """Write cmd_vel data to InfluxDB"""
         self.cmd_vel_received += 1
         
@@ -75,17 +74,7 @@ class InfluxLogger:
         self.last_cmd_vel_time = new_time
         
         try:
-            point = (
-                Point("cmd_vel")
-                .tag("robot_id", "turtlebot_01")
-                .field("linear_x", float(msg.linear.x))
-                .field("linear_y", float(msg.linear.y))
-                .field("linear_z", float(msg.linear.z))
-                .field("angular_x", float(msg.angular.x))
-                .field("angular_y", float(msg.angular.y))
-                .field("angular_z", float(msg.angular.z))
-            )
-            
+            point = msg.to_influx_point({})
             self.client.write(point)
             self.cmd_vel_written += 1
             logger.info(f"[CMD_VEL] ✓ Written - linear.x={msg.linear.x:.3f}, angular.z={msg.angular.z:.3f}")
@@ -93,7 +82,7 @@ class InfluxLogger:
         except Exception as e:
             logger.error(f"[CMD_VEL] ✗ Failed to write: {e}", exc_info=True)
     
-    def odom_callback(self, msg):
+    def odom_callback(self, msg: OdometryMessage):
         """Write odometry data to InfluxDB"""
         self.odom_received += 1
         
@@ -106,18 +95,7 @@ class InfluxLogger:
         self.odom_time = new_time
         
         try:
-            point = (
-                Point("odometry")
-                .tag("robot_id", "turtlebot_01")
-                .tag("frame_id", msg.header.frame_id)
-                .field("pos_x", float(msg.pose.pose.position.x))
-                .field("pos_y", float(msg.pose.pose.position.y))
-                .field("pos_z", float(msg.pose.pose.position.z))
-                .field("vel_linear_x", float(msg.twist.twist.linear.x))
-                .field("vel_angular_z", float(msg.twist.twist.angular.z))
-                .time(msg.header.stamp.to_nsec())  # Use ROS timestamp
-            )
-            
+            point = msg.to_influx_point({})
             self.client.write(point)
             self.odom_written += 1
             logger.info(f"[ODOM] ✓ Written - pos=({msg.pose.pose.position.x:.2f}, {msg.pose.pose.position.y:.2f}), vel={msg.twist.twist.linear.x:.2f}")

@@ -12,7 +12,7 @@ members = ["packages/*"]
 
 [tool.uv.sources]
 turtlewatch-bridge = { workspace = true }
-turtlewatch-msg-gen = { workspace = true }
+turtlewatch-msg_gen = { workspace = true }
 
 [tool.pyright]
 typeCheckingMode = "strict"

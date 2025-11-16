@@ -1,3 +1,4 @@
 .direnv/
+**/__pycache__/
 influxdb_token.txt
 db_session_key.txt
